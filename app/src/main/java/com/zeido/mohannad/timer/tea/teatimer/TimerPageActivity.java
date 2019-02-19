@@ -13,24 +13,23 @@ import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 import java.util.Locale;
 
 public class TimerPageActivity extends AppCompatActivity {
-    TextView mTextView;
+    TextView mTimerText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_page);
 
-        mTextView = findViewById(R.id.time);
+        mTimerText = findViewById(R.id.time);
         Intent intent = getIntent();
         TextView teaNameTextView = findViewById(R.id.name);
         Tea tea = (Tea) intent.getSerializableExtra("teaObject");
         teaNameTextView.setText(tea.getTeaName());
-
         TextView teaBrewingTemperature = findViewById(R.id.temperature);
         teaBrewingTemperature.setText(getString(R.string.brew_temperature, tea.getBrewingTemperature()));
 
 
         final long brewTimeMillis = tea.getBrewingTime() * 60000; //todo time will probs be saved as long
-
+        mTimerText.setText(formatTimerText(brewTimeMillis));
         final Button timerButton = findViewById(R.id.timerButton);
         timerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,12 +38,12 @@ public class TimerPageActivity extends AppCompatActivity {
                 new CountDownTimer(brewTimeMillis, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        mTextView.setText(formatTimerText(millisUntilFinished));
+                        mTimerText.setText(formatTimerText(millisUntilFinished));
                     }
 
                     public void onFinish() {
                         timerButton.setEnabled(true);
-                        mTextView.setText(getString(R.string.default_timer));
+                        mTimerText.setText(getString(R.string.default_timer));
                     }
                 }.start();
             }
