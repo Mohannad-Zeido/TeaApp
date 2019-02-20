@@ -13,7 +13,7 @@ public class SampleDataProvider {
         teaList = new ArrayList<>();
         teaMap = new HashMap<>();
 
-        addItem(new Tea( "Black Tea", null, 2, 100, ""));
+        addItem(new Tea( "Black Tea", null, 1, 100, ""));
         addItem(new Tea( "Green Tea", null, 2, 80, ""));
         addItem(new Tea( "Oolong Tea", null, 2, 100, ""));
         addItem(new Tea( "White Tea", null, 2, 100, ""));

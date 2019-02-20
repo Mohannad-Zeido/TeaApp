@@ -1,5 +1,6 @@
 package com.zeido.mohannad.timer.tea.teatimer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -7,21 +8,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 
 import java.util.Locale;
 
 public class TimerPageActivity extends AppCompatActivity {
-    TextView mTimerText;
+    TextView mCountdownTimer;
+    Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_page);
-
-        mTimerText = findViewById(R.id.time);
+        mContext = this;
+        mCountdownTimer = findViewById(R.id.time);
         Intent intent = getIntent();
-        TextView teaNameTextView = findViewById(R.id.name);
+        final TextView teaNameTextView = findViewById(R.id.name);
         Tea tea = (Tea) intent.getSerializableExtra("teaObject");
         teaNameTextView.setText(tea.getTeaName());
         TextView teaBrewingTemperature = findViewById(R.id.temperature);
@@ -29,23 +32,38 @@ public class TimerPageActivity extends AppCompatActivity {
 
 
         final long brewTimeMillis = tea.getBrewingTime() * 60000; //todo time will probs be saved as long
-        mTimerText.setText(formatTimerText(brewTimeMillis));
-        final Button timerButton = findViewById(R.id.timerButton);
-        timerButton.setOnClickListener(new View.OnClickListener() {
+        mCountdownTimer.setText(formatTimerText(brewTimeMillis));
+        final Button startTimerButton = findViewById(R.id.timerButton);
+        final Button stopTimerButton = findViewById(R.id.stopTimer);
+        final CountDownTimer timer = new CountDownTimer(brewTimeMillis, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                mCountdownTimer.setText(formatTimerText(millisUntilFinished));
+            }
+
+            public void onFinish() {
+                startTimerButton.setEnabled(true);
+                stopTimerButton.setEnabled(true);
+                mCountdownTimer.setText(getString(R.string.default_timer));
+                Toast.makeText(mContext, "Timer done enjoy the tea!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        };
+        stopTimerButton.setEnabled(false);
+        startTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timerButton.setEnabled(false);
-                new CountDownTimer(brewTimeMillis, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                        mTimerText.setText(formatTimerText(millisUntilFinished));
-                    }
-
-                    public void onFinish() {
-                        timerButton.setEnabled(true);
-                        mTimerText.setText(getString(R.string.default_timer));
-                    }
-                }.start();
+                startTimerButton.setEnabled(false);
+                stopTimerButton.setEnabled(true);
+                timer.start();
+            }
+        });
+        stopTimerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimerButton.setEnabled(true);
+                stopTimerButton.setEnabled(false);
+                timer.cancel();
             }
         });
 
