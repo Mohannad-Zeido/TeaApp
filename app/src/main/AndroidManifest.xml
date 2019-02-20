@@ -12,11 +12,11 @@
         <activity android:name=".HomePageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
+            </intent-filter>
+            <!--needed this for indexability-->
+            <intent-filter>
                 <action android:name="android.intent.action.View" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -25,9 +25,18 @@
                     android:pathPrefix="/timers"
                     android:scheme="http" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="example"
+                    android:host="time" />
+            </intent-filter>
+            <!--indexability code ends here-->
         </activity>
-        <activity android:name=".TimerPageActivity"></activity>
-        <activity android:name=".AddTeaActivity"></activity>
+        <activity android:name=".TimerPageActivity">
+        </activity>
+        <activity android:name=".AddTeaActivity"/>
     </application>
 
 </manifest>
