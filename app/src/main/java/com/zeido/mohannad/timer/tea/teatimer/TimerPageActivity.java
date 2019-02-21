@@ -27,27 +27,24 @@ public class TimerPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_page);
-        mContext = this;
-        mTimerText = findViewById(R.id.time);
         Intent intent = getIntent();
-        final TextView teaNameTextView = findViewById(R.id.name);
         mTea = (Tea) intent.getSerializableExtra("teaObject");
-        teaNameTextView.setText(mTea.getTeaName());
+
         TextView teaBrewingTemperature = findViewById(R.id.temperature);
-        teaBrewingTemperature.setText(getString(R.string.brew_temperature, mTea.getBrewingTemperature()));
-        mTimeLeft = 0;
-
-        mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
-
+        TextView teaNameTextView = findViewById(R.id.name);
+        mTimerText = findViewById(R.id.time);
         mStartTimerButton = findViewById(R.id.startButton);
         mStopTimerButton = findViewById(R.id.stopButton);
         mPauseTimeButton = findViewById(R.id.pauseButton);
 
-
-
+        mContext = this;
+        mTimeLeft = 0;
+        
+        teaNameTextView.setText(mTea.getTeaName());
+        teaBrewingTemperature.setText(getString(R.string.brew_temperature, mTea.getBrewingTemperature()));
+        mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
         mStartTimerButton.setOnClickListener(startOnClickListener);
         mStopTimerButton.setOnClickListener(stopOnClickListener);
-
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
     }
 
