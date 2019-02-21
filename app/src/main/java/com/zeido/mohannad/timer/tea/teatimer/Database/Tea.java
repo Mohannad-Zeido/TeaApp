@@ -6,12 +6,12 @@ public class Tea implements Serializable {
     private String teaID;
     private String teaName;
     private String description;
-    private int brewingTime;
+    private long brewingTime;
     private int brewingTemperature;
     private String image;
 
 
-    public Tea(String teaName, String description, int brewingTime, int brewingTemperature, String image) {
+    public Tea(String teaName, String description, long brewingTime, int brewingTemperature, String image) {
         this.teaName = teaName;
         this.description = description;
         this.brewingTime = brewingTime;
@@ -39,11 +39,11 @@ public class Tea implements Serializable {
         this.description = description;
     }
 
-    public int getBrewingTime() {
+    public long getBrewingTime() {
         return brewingTime;
     }
 
-    public void setBrewingTime(int brewingTime) {
+    public void setBrewingTime(long brewingTime) {
         this.brewingTime = brewingTime;
     }
 

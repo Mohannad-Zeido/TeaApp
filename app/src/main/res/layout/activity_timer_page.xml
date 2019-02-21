@@ -73,11 +73,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="true"
             android:text="@string/start_timer"
             android:textAllCaps="false"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="81dp"
-            tools:layout_editor_absoluteY="647dp" />
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/pauseButton"
@@ -85,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@string/pause_timer"
             android:textAllCaps="false"
             android:textStyle="bold"/>
@@ -95,11 +95,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@string/stop_timer"
             android:textAllCaps="false"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="272dp"
-            tools:layout_editor_absoluteY="539dp" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

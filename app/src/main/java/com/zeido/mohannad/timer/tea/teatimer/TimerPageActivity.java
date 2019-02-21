@@ -20,6 +20,8 @@ public class TimerPageActivity extends AppCompatActivity {
     long mTimeLeft;
     Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
     CountDownTimer mCountDownTimer;
+    Tea mTea;
+    boolean isPaused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,46 +31,68 @@ public class TimerPageActivity extends AppCompatActivity {
         mTimerText = findViewById(R.id.time);
         Intent intent = getIntent();
         final TextView teaNameTextView = findViewById(R.id.name);
-        Tea tea = (Tea) intent.getSerializableExtra("teaObject");
-        teaNameTextView.setText(tea.getTeaName());
+        mTea = (Tea) intent.getSerializableExtra("teaObject");
+        teaNameTextView.setText(mTea.getTeaName());
         TextView teaBrewingTemperature = findViewById(R.id.temperature);
-        teaBrewingTemperature.setText(getString(R.string.brew_temperature, tea.getBrewingTemperature()));
+        teaBrewingTemperature.setText(getString(R.string.brew_temperature, mTea.getBrewingTemperature()));
         mTimeLeft = 0;
 
-        final long brewTimeMillis = tea.getBrewingTime() * 60000; //todo time will probs be saved as long
-        mTimerText.setText(formatTimerText(brewTimeMillis));
+        mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
 
         mStartTimerButton = findViewById(R.id.startButton);
         mStopTimerButton = findViewById(R.id.stopButton);
         mPauseTimeButton = findViewById(R.id.pauseButton);
 
-        mCountDownTimer = createTimer(brewTimeMillis);
-        mStopTimerButton.setEnabled(false);
-        mStartTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+
+        mStartTimerButton.setOnClickListener(startOnClickListener);
+        mStopTimerButton.setOnClickListener(stopOnClickListener);
+
+        mPauseTimeButton.setOnClickListener(pauseOnClickListener);
+    }
+
+    private View.OnClickListener pauseOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mPauseTimeButton.setEnabled(false);
+            mStartTimerButton.setEnabled(true);
+            mStopTimerButton.setEnabled(true);
+            isPaused = true;
+            mCountDownTimer.cancel();
+            mTimerText.setText(formatTimerText(mTimeLeft));
+        }
+    };
+
+    private View.OnClickListener stopOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            mStartTimerButton.setEnabled(true);
+            mStopTimerButton.setEnabled(false);
+            mPauseTimeButton.setEnabled(false);
+            mCountDownTimer.cancel();
+            mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
+        }
+    };
+
+    private View.OnClickListener startOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(!isPaused){
+                mPauseTimeButton.setEnabled(true);
                 mStartTimerButton.setEnabled(false);
                 mStopTimerButton.setEnabled(true);
+                mCountDownTimer = createTimer(mTea.getBrewingTime());
+                mCountDownTimer.start();
+            }else{
+                mPauseTimeButton.setEnabled(true);
+                mStartTimerButton.setEnabled(false);
+                mStopTimerButton.setEnabled(true);
+                mCountDownTimer = createTimer(mTimeLeft);
                 mCountDownTimer.start();
             }
-        });
-        mStopTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mStartTimerButton.setEnabled(true);
-                mStopTimerButton.setEnabled(false);
-                mCountDownTimer.cancel();
-                mTimerText.setText(formatTimerText(brewTimeMillis));
-            }
-        });
-        mPauseTimeButton.setEnabled(false);
-        mPauseTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //todo change the text to resume and resume timer
-            }
-        });
-    }
+
+        }
+    };
 
     private CountDownTimer createTimer(final long time){
         return new CountDownTimer(time, 1000) {
