@@ -68,24 +68,34 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/timerButton"
+            android:id="@+id/startButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/start_timer_button"
+            android:text="@string/start_timer"
             android:textAllCaps="false"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="81dp"
             tools:layout_editor_absoluteY="647dp" />
 
         <Button
-            android:id="@+id/stopTimer"
+            android:id="@+id/pauseButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/stop_timer_button"
+            android:text="@string/pause_timer"
+            android:textAllCaps="false"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/stopButton"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/stop_timer"
             android:textAllCaps="false"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="272dp"
