@@ -37,7 +37,7 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton = findViewById(R.id.startButton);
         mStopTimerButton = findViewById(R.id.stopButton);
         mPauseTimeButton = findViewById(R.id.pauseButton);
-
+        //todo add descriptiuon here.
         mContext = this;
         mTimeLeft = 0;
         
@@ -113,15 +113,18 @@ public class TimerPageActivity extends AppCompatActivity {
     private String formatTimerText(long timeInMilliseconds){
 //        long timeInMilliseconds = time * 60000;
 
-        long seconds = timeInMilliseconds / 1000;
-        long minutes = seconds / 60;
+        long wholeTimeSeconds = timeInMilliseconds / 1000;
+        long wholeTimeMinutes = wholeTimeSeconds / 60;
+        long hours = wholeTimeMinutes / 60;
 
-        seconds = seconds % 60;
-        minutes = minutes % 60;
+
+        long seconds = wholeTimeSeconds % 60;
+        long minutes = wholeTimeMinutes % 60;
 
         String secondsD = String.format(Locale.getDefault(), "%02d", seconds);
         String minutesD = String.format(Locale.getDefault(), "%02d", minutes);
+        String hoursD = String.format(Locale.getDefault(), "%02d", hours);
         //todo add code to format minutes and hours.
-       return /*hoursD + ":" +*/ minutesD + ":" + secondsD;
+       return /*hoursD + ":" + */minutesD + ":" + secondsD;
     }
 }
