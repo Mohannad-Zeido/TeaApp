@@ -15,13 +15,14 @@ import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 import java.util.Locale;
 
 public class TimerPageActivity extends AppCompatActivity {
-    TextView mTimerText;
-    Context mContext;
-    long mTimeLeft;
-    Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
-    CountDownTimer mCountDownTimer;
-    Tea mTea;
-    boolean isPaused;
+
+    private TextView mTimerText;
+    private Context mContext;
+    private long mTimeLeft;
+    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
+    private CountDownTimer mCountDownTimer;
+    private Tea mTea;
+    private boolean isPaused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
