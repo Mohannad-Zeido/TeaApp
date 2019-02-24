@@ -2,6 +2,7 @@ package com.zeido.mohannad.timer.tea.teatimer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 
 import java.util.List;
-import java.util.Locale;
 
 public class TeaItemAdapter extends RecyclerView.Adapter<TeaItemAdapter.ViewHolder>{
 
@@ -25,14 +25,15 @@ public class TeaItemAdapter extends RecyclerView.Adapter<TeaItemAdapter.ViewHold
     }
 
     @Override
-    public TeaItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public TeaItemAdapter.ViewHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View itemView = inflater.inflate(R.layout.single_tea_item, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(TeaItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TeaItemAdapter.ViewHolder holder, int position) {
         final Tea tea = mTeaList.get(position);
         holder.teaName.setText(tea.getTeaName());
         String instructions = mContext.getString(R.string.brew_minutes, tea.getBrewingTime()/60000) + ", " + mContext.getString(R.string.brew_temperature, tea.getBrewingTemperature());
@@ -58,9 +59,9 @@ public class TeaItemAdapter extends RecyclerView.Adapter<TeaItemAdapter.ViewHold
         return mTeaList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView teaName, brewInstructions;
+        private TextView teaName, brewInstructions;
 
         ViewHolder(View itemView) {
             super(itemView);
