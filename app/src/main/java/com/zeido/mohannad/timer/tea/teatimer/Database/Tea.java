@@ -1,13 +1,32 @@
 package com.zeido.mohannad.timer.tea.teatimer.Database;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
+@Entity(tableName = "teas")
 public class Tea implements Serializable {
+//    @PrimaryKey(autoGenerate = true)
     private String teaID;
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "name")
     private String teaName;
+
+    @ColumnInfo(name = "description")
     private String description;
+
+    @ColumnInfo(name = "time")
     private long brewingTime;
+
+    @ColumnInfo(name = "temperature")
     private int brewingTemperature;
+
+    @ColumnInfo(name = "image")
     private String image;
 
 
