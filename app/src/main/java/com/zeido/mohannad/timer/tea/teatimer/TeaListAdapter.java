@@ -19,9 +19,9 @@ public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHold
     private List<Tea> mTeaList;
     private Context mContext;
 
-    TeaListAdapter(Context context, List<Tea> items) {
+    TeaListAdapter(Context context) {
         this.mContext = context;
-        this.mTeaList = items;
+//        this.mTeaList = items;
     }
 
     @Override
@@ -34,32 +34,46 @@ public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull TeaListAdapter.ViewHolder holder, int position) {
-        final Tea tea = mTeaList.get(position);
-        holder.teaName.setText(tea.getTeaName());
-        String instructions = mContext.getString(R.string.brew_minutes, tea.getBrewingTime()/60000) + ", " + mContext.getString(R.string.brew_temperature, tea.getBrewingTemperature());
-        holder.brewInstructions.setText(instructions);
+        if(mTeaList != null){
+            final Tea tea = mTeaList.get(position);
+            holder.teaName.setText(tea.getTeaName());
+            String instructions = mContext.getString(R.string.brew_minutes, tea.getBrewingTime()/60000) + ", " + mContext.getString(R.string.brew_temperature, tea.getBrewingTemperature());
+            holder.brewInstructions.setText(instructions);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "You selected " + tea.getTeaName(),
-                        Toast.LENGTH_SHORT).show();
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, "You selected " + tea.getTeaName(),
+                            Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(view.getContext(), TimerPageActivity.class);
-                intent.putExtra("teaObject", tea);
-                mContext.startActivity(intent);
+                    Intent intent = new Intent(view.getContext(), TimerPageActivity.class);
+                    intent.putExtra("teaObject", tea);
+                    mContext.startActivity(intent);
 
-            }
-        });
+                }
+            });
 
+        }else{
+            holder.teaName.setText("No Tea Yet");
+        }
+    }
+
+    public void setTeas(List<Tea> teas){
+        mTeaList = teas;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mTeaList.size();
+        if (mTeaList != null) {
+            return mTeaList.size();
+        }
+        else{
+            return 0;
+        }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView teaName, brewInstructions;
 

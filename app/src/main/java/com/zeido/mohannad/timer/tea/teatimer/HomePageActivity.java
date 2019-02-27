@@ -33,7 +33,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter = new TeaListAdapter(this, teaList);
+        mAdapter = new TeaListAdapter(this);
 
         RecyclerView recyclerView = findViewById(R.id.mainRecyclerView);
         recyclerView.setAdapter(mAdapter);
