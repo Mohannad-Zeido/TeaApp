@@ -17,7 +17,7 @@ import java.util.List;
 public class HomePageActivity extends AppCompatActivity {
 
     private List<Tea> teaList = SampleDataProvider.teaList;
-    private TeaItemAdapter mAdapter;
+    private TeaListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter = new TeaItemAdapter(this, teaList);
+        mAdapter = new TeaListAdapter(this, teaList);
 
         RecyclerView recyclerView = findViewById(R.id.mainRecyclerView);
         recyclerView.setAdapter(mAdapter);

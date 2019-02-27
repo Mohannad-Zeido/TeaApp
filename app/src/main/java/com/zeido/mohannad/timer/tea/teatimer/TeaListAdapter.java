@@ -14,26 +14,26 @@ import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 
 import java.util.List;
 
-public class TeaItemAdapter extends RecyclerView.Adapter<TeaItemAdapter.ViewHolder>{
+public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHolder>{
 
     private List<Tea> mTeaList;
     private Context mContext;
 
-    TeaItemAdapter(Context context, List<Tea> items) {
+    TeaListAdapter(Context context, List<Tea> items) {
         this.mContext = context;
         this.mTeaList = items;
     }
 
     @Override
     @NonNull
-    public TeaItemAdapter.ViewHolder onCreateViewHolder( @NonNull ViewGroup parent, int viewType) {
+    public TeaListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View itemView = inflater.inflate(R.layout.single_tea_item, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TeaItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TeaListAdapter.ViewHolder holder, int position) {
         final Tea tea = mTeaList.get(position);
         holder.teaName.setText(tea.getTeaName());
         String instructions = mContext.getString(R.string.brew_minutes, tea.getBrewingTime()/60000) + ", " + mContext.getString(R.string.brew_temperature, tea.getBrewingTemperature());
