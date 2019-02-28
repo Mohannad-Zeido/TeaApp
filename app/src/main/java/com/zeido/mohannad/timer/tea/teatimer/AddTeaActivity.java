@@ -37,7 +37,7 @@ public class AddTeaActivity extends AppCompatActivity {
             String teaName = mTeaName.getText().toString();
             long brewingTime = Long.parseLong(mBrewingTime.getText().toString());
             int temperature = Integer.parseInt(mTemperature.getText().toString());
-            Tea tea = new Tea(teaName,"", brewingTime, temperature,null);
+            Tea tea = new Tea(teaName,"", brewingTime * 60000, temperature,null);
             Intent intent = new Intent(view.getContext(), TimerPageActivity.class);
             intent.putExtra("teaObject", tea);
             //Todo validate the text sent by user
