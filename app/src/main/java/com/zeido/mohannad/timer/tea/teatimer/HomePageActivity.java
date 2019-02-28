@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.zeido.mohannad.timer.tea.teatimer.Database.SampleDataProvider;
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
 import com.zeido.mohannad.timer.tea.teatimer.Database.TeaViewModel;
 

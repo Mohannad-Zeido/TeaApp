@@ -7,10 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.zeido.mohannad.timer.tea.teatimer.Database.SampleDataProvider;
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
-
-import java.util.List;
 
 public class AddTeaActivity extends AppCompatActivity {
 
