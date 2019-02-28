@@ -1,5 +1,7 @@
 package com.zeido.mohannad.timer.tea.teatimer;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.zeido.mohannad.timer.tea.teatimer.Database.SampleDataProvider;
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
+import com.zeido.mohannad.timer.tea.teatimer.Database.TeaViewModel;
 
 import java.util.List;
 
@@ -18,6 +21,8 @@ public class HomePageActivity extends AppCompatActivity {
 
     private List<Tea> teaList = SampleDataProvider.teaList;
     private TeaListAdapter mAdapter;
+
+    private TeaViewModel mTeaViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,14 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
+        mTeaViewModel = ViewModelProviders.of(this).get(TeaViewModel.class);
+
+        mTeaViewModel.getmAllTeas().observe(this, new Observer<List<Tea>>() {
+            @Override
+            public void onChanged(@Nullable List<Tea> teas) {
+                mAdapter.setTeas(teas);
+            }
+        });
         mAdapter = new TeaListAdapter(this);
 
         RecyclerView recyclerView = findViewById(R.id.mainRecyclerView);

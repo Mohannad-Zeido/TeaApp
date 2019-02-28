@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity(tableName = "teas")
 public class Tea implements Serializable {
 //    @PrimaryKey(autoGenerate = true)
-    private String teaID;
+//    private String teaID;
 
     @PrimaryKey
     @NonNull
@@ -38,9 +38,9 @@ public class Tea implements Serializable {
         this.image = image;
     }
 
-    public String getTeaID() {
-        return teaID;
-    }
+//    public String getTeaID() {
+//        return teaID;
+//    }
 
     public String getTeaName() {
         return teaName;
