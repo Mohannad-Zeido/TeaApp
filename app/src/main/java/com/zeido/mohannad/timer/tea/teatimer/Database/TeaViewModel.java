@@ -21,7 +21,7 @@ public class TeaViewModel extends AndroidViewModel {
         return mAllTeas;
     }
 
-    public void insetr(Tea tea){
+    public void insert(Tea tea){
         mTeaRepository.insert(tea);
     }
 }

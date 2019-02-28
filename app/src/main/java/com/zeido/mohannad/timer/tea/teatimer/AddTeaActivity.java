@@ -1,5 +1,6 @@
 package com.zeido.mohannad.timer.tea.teatimer;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,14 +36,15 @@ public class AddTeaActivity extends AppCompatActivity {
     private View.OnClickListener submitButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
-            List<Tea> teaList = SampleDataProvider.teaList;
+;
             String teaName = mTeaName.getText().toString();
             long brewingTime = Long.parseLong(mBrewingTime.getText().toString());
             int temperature = Integer.parseInt(mTemperature.getText().toString());
-            teaList.add(new Tea(teaName,"", brewingTime, temperature,null));
+            Tea tea = new Tea(teaName,"", brewingTime, temperature,null);
+            Intent intent = new Intent(view.getContext(), TimerPageActivity.class);
+            intent.putExtra("teaObject", tea);
             //Todo validate the text sent by user
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, intent);
             finish();
         }
     };

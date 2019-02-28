@@ -19,9 +19,7 @@ import java.util.List;
 
 public class HomePageActivity extends AppCompatActivity {
 
-    private List<Tea> teaList = SampleDataProvider.teaList;
     private TeaListAdapter mAdapter;
-
     private TeaViewModel mTeaViewModel;
 
     @Override
@@ -56,7 +54,8 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
-            mAdapter.notifyDataSetChanged();
+            Tea tea = (Tea) data.getSerializableExtra("teaObject");
+            mTeaViewModel.insert(tea);
             Toast.makeText(this, "Tea Added", Toast.LENGTH_SHORT).show();
         }
 
