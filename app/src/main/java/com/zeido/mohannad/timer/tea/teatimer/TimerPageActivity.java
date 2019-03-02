@@ -19,7 +19,7 @@ public class TimerPageActivity extends AppCompatActivity {
     private TextView mTimerText;
     private Context mContext;
     private long mTimeLeft;
-    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
+    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton, mDeleteTeaButton;
     private CountDownTimer mCountDownTimer;
     private Tea mTea;
     private boolean isPaused;
@@ -37,6 +37,7 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton = findViewById(R.id.startButton);
         mStopTimerButton = findViewById(R.id.stopButton);
         mPauseTimeButton = findViewById(R.id.pauseButton);
+        mDeleteTeaButton = findViewById(R.id.deleteButton);
         //todo add descriptiuon here.
         mContext = this;
         mTimeLeft = 0;
@@ -47,7 +48,19 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton.setOnClickListener(startOnClickListener);
         mStopTimerButton.setOnClickListener(stopOnClickListener);
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
+        mDeleteTeaButton.setOnClickListener(deleteTeaListener);
     }
+
+    private View.OnClickListener deleteTeaListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), HomePageActivity.class);
+            intent.putExtra("teaObject", mTea);
+            intent.putExtra("Opperation", "delete");
+            setResult(200, intent); // 200 is the delete number
+            finish();
+        }
+    };
 
     private View.OnClickListener pauseOnClickListener = new View.OnClickListener() {
         @Override
