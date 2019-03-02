@@ -25,6 +25,22 @@ public class TeaRepository {
         new insertAsyncTask(mTeaDao).execute(tea);
     }
 
+    public void delete(Tea tea) { new deleteAsyncTask(mTeaDao).execute(tea);    }
+
+    private static class deleteAsyncTask extends AsyncTask<Tea, Void, Void> {
+
+        private TeaDao mAsyncTaskDao;
+
+        deleteAsyncTask(TeaDao dao){
+            mAsyncTaskDao = dao;
+        }
+        @Override
+        protected Void doInBackground(final Tea... params) {
+            mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
     private static class insertAsyncTask extends AsyncTask<Tea, Void, Void> {
         private TeaDao mAsyncTaskDao;
 

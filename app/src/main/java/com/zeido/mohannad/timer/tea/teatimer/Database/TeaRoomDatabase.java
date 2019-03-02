@@ -43,6 +43,7 @@ public abstract class TeaRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params){
+            //Todo add something to check if they exist on the DB and if they do dont add.
             Tea tea = new Tea( "Black Tea", null, 60000, 100, "");
             mTeaDao.insert(tea);
             tea = new Tea( "Green Tea", null, 120000, 80, "");
