@@ -1,5 +1,6 @@
 package com.zeido.mohannad.timer.tea.teatimer;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zeido.mohannad.timer.tea.teatimer.Database.Tea;
+import com.zeido.mohannad.timer.tea.teatimer.Database.TeaViewModel;
 
 import java.util.Locale;
 
@@ -23,6 +25,7 @@ public class TimerPageActivity extends AppCompatActivity {
     private CountDownTimer mCountDownTimer;
     private Tea mTea;
     private boolean isPaused;
+    private TeaViewModel mTeaViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +52,14 @@ public class TimerPageActivity extends AppCompatActivity {
         mStopTimerButton.setOnClickListener(stopOnClickListener);
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
         mDeleteTeaButton.setOnClickListener(deleteTeaListener);
+
+        mTeaViewModel = ViewModelProviders.of(this).get(TeaViewModel.class);
     }
 
     private View.OnClickListener deleteTeaListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), TimerPageActivity.class);
-            intent.putExtra("teaObject", mTea);
-            intent.putExtra("Opperation", "delete");
-            setResult(200, intent); // 200 is the delete number
+            mTeaViewModel.delete(mTea);
             finish();
         }
     };
