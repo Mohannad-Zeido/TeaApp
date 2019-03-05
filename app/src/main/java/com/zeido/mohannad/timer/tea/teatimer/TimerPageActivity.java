@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,7 +23,7 @@ public class TimerPageActivity extends AppCompatActivity {
     private TextView mTimerText;
     private Context mContext;
     private long mTimeLeft;
-    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton, mDeleteTeaButton;
+    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
     private CountDownTimer mCountDownTimer;
     private Tea mTea;
     private boolean isPaused;
@@ -31,6 +33,7 @@ public class TimerPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_page);
+//        setSupportActionBar(R.menu.menu_activity_timer_page);
         Intent intent = getIntent();
         mTea = (Tea) intent.getSerializableExtra("teaObject");
 
@@ -40,7 +43,6 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton = findViewById(R.id.startButton);
         mStopTimerButton = findViewById(R.id.stopButton);
         mPauseTimeButton = findViewById(R.id.pauseButton);
-        mDeleteTeaButton = findViewById(R.id.deleteButton);
         //todo add description here.
         mContext = this;
         mTimeLeft = 0;
@@ -51,18 +53,16 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton.setOnClickListener(startOnClickListener);
         mStopTimerButton.setOnClickListener(stopOnClickListener);
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
-        mDeleteTeaButton.setOnClickListener(deleteTeaListener);
 
         mTeaViewModel = ViewModelProviders.of(this).get(TeaViewModel.class);
     }
 
-    private View.OnClickListener deleteTeaListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mTeaViewModel.delete(mTea);
-            finish();
-        }
-    };
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_timer_page, menu);
+        return super.onCreateOptionsMenu(menu);
+//        return true;
+    }
 
     private View.OnClickListener pauseOnClickListener = new View.OnClickListener() {
         @Override
@@ -130,7 +130,7 @@ public class TimerPageActivity extends AppCompatActivity {
 
         long wholeTimeSeconds = timeInMilliseconds / 1000;
         long wholeTimeMinutes = wholeTimeSeconds / 60;
-        long hours = wholeTimeMinutes / 60;
+//        long hours = wholeTimeMinutes / 60;
 
 
         long seconds = wholeTimeSeconds % 60;
@@ -138,8 +138,24 @@ public class TimerPageActivity extends AppCompatActivity {
 
         String secondsD = String.format(Locale.getDefault(), "%02d", seconds);
         String minutesD = String.format(Locale.getDefault(), "%02d", minutes);
-        String hoursD = String.format(Locale.getDefault(), "%02d", hours);
+//        String hoursD = String.format(Locale.getDefault(), "%02d", hours);
         //todo add code to format minutes and hours.
        return /*hoursD + ":" + */minutesD + ":" + secondsD;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_tea:
+                mTeaViewModel.delete(mTea);
+                finish();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }
