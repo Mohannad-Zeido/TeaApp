@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,7 +26,7 @@ public class TimerPageActivity extends AppCompatActivity {
     private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
     private TextView mTimerText;
     private CountDownTimer mCountDownTimer;
-    private boolean mIsPaused, mIsTimerOn;
+    private boolean mIsPaused, mIsRunning;
     private long mTimeLeft;
     private Tea mTea;
 
@@ -56,26 +57,30 @@ public class TimerPageActivity extends AppCompatActivity {
         mPauseTimeButton = findViewById(R.id.pauseButton);
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
 
-        //todo add description ui item here here?
-
         mTeaViewModel = ViewModelProviders.of(this).get(TeaViewModel.class);
 
         if(savedInstanceState != null){
-            if(savedInstanceState.getBoolean("TIMER_RUNNING")){
-                mStartTimerButton.setEnabled(false);
-                mStopTimerButton.setEnabled(true);
-                mPauseTimeButton.setEnabled(true);
-                mIsTimerOn = true;
-                mIsPaused = false;
-                mCountDownTimer = createTimer(savedInstanceState.getLong("TIME_LEFT"));
-                mCountDownTimer.start();
-            }else if (savedInstanceState.getBoolean("TIMER_PAUSED")){
-                setTimerPausedStates();
-                mTimeLeft = savedInstanceState.getLong("TIME_LEFT");
-                mTimerText.setText(formatTimerText(mTimeLeft));
-                mCountDownTimer = createTimer(savedInstanceState.getLong("TIME_LEFT"));
-            }
+            restorePreviousState(savedInstanceState);
         }
+    }
+
+    private void restorePreviousState(@NonNull Bundle savedInstanceState){
+        getDataFromSavedInstanceState(savedInstanceState);
+        if(mIsRunning){
+            setTimerRunningStates();
+            mCountDownTimer = createTimer(mTimeLeft);
+            mCountDownTimer.start();
+        }else if (mIsPaused){
+            setTimerPausedStates();
+            mTimerText.setText(formatTimerText(mTimeLeft));
+            mCountDownTimer = createTimer(mTimeLeft);
+        }
+    }
+
+    private void getDataFromSavedInstanceState( @NonNull Bundle savedInstanceState){
+            mIsRunning = savedInstanceState.getBoolean("TIMER_RUNNING");
+            mIsPaused = savedInstanceState.getBoolean("TIMER_PAUSED");
+            mTimeLeft = savedInstanceState.getLong("TIME_LEFT");
     }
 
     @Override
@@ -170,7 +175,7 @@ public class TimerPageActivity extends AppCompatActivity {
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong("TIME_LEFT", mTimeLeft);
-        outState.putBoolean("TIMER_RUNNING", mIsTimerOn);
+        outState.putBoolean("TIMER_RUNNING", mIsRunning);
         outState.putBoolean("TIMER_PAUSED", mIsPaused);
     }
 
@@ -180,7 +185,7 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton.setEnabled(false);
         mStopTimerButton.setEnabled(true);
         mPauseTimeButton.setEnabled(true);
-        mIsTimerOn = true;
+        mIsRunning = true;
         mIsPaused = false;
     }
 
@@ -188,7 +193,7 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton.setEnabled(true);
         mStopTimerButton.setEnabled(true);
         mPauseTimeButton.setEnabled(false);
-        mIsTimerOn = false;
+        mIsRunning = false;
         mIsPaused = true;
     }
 
@@ -196,7 +201,7 @@ public class TimerPageActivity extends AppCompatActivity {
         mStartTimerButton.setEnabled(true);
         mStopTimerButton.setEnabled(false);
         mPauseTimeButton.setEnabled(false);
-        mIsTimerOn = false;
+        mIsRunning = false;
         mIsPaused = false;
     }
 }
