@@ -68,8 +68,7 @@ public class TimerPageActivity extends AppCompatActivity {
         getDataFromSavedInstanceState(savedInstanceState);
         if(mIsRunning){
             setTimerRunningStates();
-            mCountDownTimer = createTimer(mTimeLeft);
-            mCountDownTimer.start();
+            startTiming(mTimeLeft);
         }else if (mIsPaused){
             setTimerPausedStates();
             mTimerText.setText(formatTimerText(mTimeLeft));
@@ -81,12 +80,6 @@ public class TimerPageActivity extends AppCompatActivity {
             mIsRunning = savedInstanceState.getBoolean("TIMER_RUNNING");
             mIsPaused = savedInstanceState.getBoolean("TIMER_PAUSED");
             mTimeLeft = savedInstanceState.getLong("TIME_LEFT");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_timer_page, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     private View.OnClickListener pauseOnClickListener = new View.OnClickListener() {
@@ -118,31 +111,8 @@ public class TimerPageActivity extends AppCompatActivity {
         }
     };
 
-    private void startTiming(long time){
-        setTimerRunningStates();
-        mCountDownTimer = createTimer(time);
-        mCountDownTimer.start();
-    }
-
-    private CountDownTimer createTimer(final long time){
-        return new CountDownTimer(time, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                mTimerText.setText(formatTimerText(millisUntilFinished));
-                mTimeLeft = millisUntilFinished;
-            }
-
-            public void onFinish() {
-                setTimerStoppedStates();
-                mTimerText.setText(formatTimerText(time));
-                Toast.makeText(mContext, "Timer done enjoy the tea!",
-                        Toast.LENGTH_SHORT).show(); //Todo change this to a notification fragment and delete mContext
-            }
-        };
-    }
 
     private String formatTimerText(long timeInMilliseconds){
-//        long timeInMilliseconds = time * 60000;
 
         long wholeTimeSeconds = timeInMilliseconds / 1000;
         long wholeTimeMinutes = wholeTimeSeconds / 60;
@@ -159,27 +129,13 @@ public class TimerPageActivity extends AppCompatActivity {
        return /*hoursD + ":" + */minutesD + ":" + secondsD;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_delete_tea:
-                mTeaViewModel.delete(mTea);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong("TIME_LEFT", mTimeLeft);
-        outState.putBoolean("TIMER_RUNNING", mIsRunning);
-        outState.putBoolean("TIMER_PAUSED", mIsPaused);
-    }
-
     //Timer State setting
+
+    private void startTiming(long time){
+        setTimerRunningStates();
+        mCountDownTimer = createTimer(time);
+        mCountDownTimer.start();
+    }
 
     private void setTimerRunningStates(){
         mStartTimerButton.setEnabled(false);
@@ -203,5 +159,46 @@ public class TimerPageActivity extends AppCompatActivity {
         mPauseTimeButton.setEnabled(false);
         mIsRunning = false;
         mIsPaused = false;
+    }
+
+    private CountDownTimer createTimer(final long time){
+        return new CountDownTimer(time, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                mTimerText.setText(formatTimerText(millisUntilFinished));
+                mTimeLeft = millisUntilFinished;
+            }
+
+            public void onFinish() {
+                setTimerStoppedStates();
+                mTimerText.setText(formatTimerText(time));
+                Toast.makeText(mContext, "Timer done enjoy the tea!",
+                        Toast.LENGTH_SHORT).show(); //Todo change this to a notification fragment and delete mContext
+            }
+        };
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_timer_page, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_delete_tea){
+                mTeaViewModel.delete(mTea);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("TIME_LEFT", mTimeLeft);
+        outState.putBoolean("TIMER_RUNNING", mIsRunning);
+        outState.putBoolean("TIMER_PAUSED", mIsPaused);
     }
 }
