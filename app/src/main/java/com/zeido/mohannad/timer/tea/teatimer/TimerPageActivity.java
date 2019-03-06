@@ -75,6 +75,7 @@ public class TimerPageActivity extends AppCompatActivity {
                 mTimeLeft = savedInstanceState.getLong("TIME_LEFT");
                 isPaused = true;
                 mTimerText.setText(formatTimerText(mTimeLeft));
+                mCountDownTimer = createTimer(savedInstanceState.getLong("TIME_LEFT"));
             }
         }
     }
