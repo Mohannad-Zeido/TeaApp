@@ -20,4 +20,5 @@
     <string name="hint_add_tea_name">Earl Grey</string>
     <string name="hint_add_tea_temperature">100</string>
     <string name="hint_add_tea_brewing_time">2</string>
+    <string name="list_adapter_no_tea">No Tea Yet</string>
 </resources>

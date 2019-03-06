@@ -21,7 +21,6 @@ public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHold
 
     TeaListAdapter(Context context) {
         this.mContext = context;
-//        this.mTeaList = items;
     }
 
     @Override
@@ -43,22 +42,18 @@ public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHold
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(mContext, "You selected " + tea.getTeaName(),
-                            Toast.LENGTH_SHORT).show();
-
                     Intent intent = new Intent(view.getContext(), TimerPageActivity.class);
                     intent.putExtra("teaObject", tea);
                     mContext.startActivity(intent);
 
                 }
             });
-
         }else{
-            holder.teaName.setText("No Tea Yet");
+            holder.teaName.setText(R.string.list_adapter_no_tea);
         }
     }
 
-    public void setTeas(List<Tea> teas){
+    void setTeas(List<Tea> teas){
         mTeaList = teas;
         notifyDataSetChanged();
     }
@@ -68,18 +63,14 @@ public class TeaListAdapter extends RecyclerView.Adapter<TeaListAdapter.ViewHold
         if (mTeaList != null) {
             return mTeaList.size();
         }
-        else{
-            return 0;
-        }
+        return 0;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
         private TextView teaName, brewInstructions;
 
         ViewHolder(View itemView) {
             super(itemView);
-
             teaName = itemView.findViewById(R.id.teaName);
             brewInstructions = itemView.findViewById(R.id.brewInstructions);
         }
