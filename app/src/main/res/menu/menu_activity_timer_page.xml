@@ -7,9 +7,9 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/action_delete_tea"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/outline_delete_24"
         android:title="@string/delete_tea"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <!-- Settings, should always be in the overflow -->
     <!--<item android:id="@+id/action_settings"-->
