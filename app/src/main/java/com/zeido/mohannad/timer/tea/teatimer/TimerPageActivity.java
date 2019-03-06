@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,58 +21,59 @@ import java.util.Locale;
 public class TimerPageActivity extends AppCompatActivity {
 
 
-    //todo add methods for starting paused timer and starting new timer possible one function that takes in time a param
-
-    private TextView mTimerText;
     private Context mContext;
-    private long mTimeLeft;
-    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
-    private CountDownTimer mCountDownTimer;
-    private Tea mTea;
-    private boolean isPaused, mIsTimerOn = false;
     private TeaViewModel mTeaViewModel;
+    private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
+    private TextView mTimerText;
+    private CountDownTimer mCountDownTimer;
+    private boolean mIsPaused, mIsTimerOn;
+    private long mTimeLeft;
+    private Tea mTea;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer_page);
-//        setSupportActionBar(R.menu.menu_activity_timer_page);
+        mContext = this;
+
         Intent intent = getIntent();
         mTea = (Tea) intent.getSerializableExtra("teaObject");
 
-        TextView teaBrewingTemperature = findViewById(R.id.temperature);
         TextView teaNameTextView = findViewById(R.id.name);
-        mTimerText = findViewById(R.id.time);
-        mStartTimerButton = findViewById(R.id.startButton);
-        mStopTimerButton = findViewById(R.id.stopButton);
-        mPauseTimeButton = findViewById(R.id.pauseButton);
-        //todo add description here.
-        mContext = this;
-        mTimeLeft = 0;
-        
         teaNameTextView.setText(mTea.getTeaName());
+
+        TextView teaBrewingTemperature = findViewById(R.id.temperature);
         teaBrewingTemperature.setText(getString(R.string.brew_temperature, mTea.getBrewingTemperature()));
+
+        mTimerText = findViewById(R.id.time);
         mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
+
+        mStartTimerButton = findViewById(R.id.startButton);
         mStartTimerButton.setOnClickListener(startOnClickListener);
+
+        mStopTimerButton = findViewById(R.id.stopButton);
         mStopTimerButton.setOnClickListener(stopOnClickListener);
+
+        mPauseTimeButton = findViewById(R.id.pauseButton);
         mPauseTimeButton.setOnClickListener(pauseOnClickListener);
+
+        //todo add description ui item here here?
 
         mTeaViewModel = ViewModelProviders.of(this).get(TeaViewModel.class);
 
         if(savedInstanceState != null){
             if(savedInstanceState.getBoolean("TIMER_RUNNING")){
-                mPauseTimeButton.setEnabled(true);
                 mStartTimerButton.setEnabled(false);
                 mStopTimerButton.setEnabled(true);
+                mPauseTimeButton.setEnabled(true);
                 mIsTimerOn = true;
+                mIsPaused = false;
                 mCountDownTimer = createTimer(savedInstanceState.getLong("TIME_LEFT"));
                 mCountDownTimer.start();
             }else if (savedInstanceState.getBoolean("TIMER_PAUSED")){
-                mPauseTimeButton.setEnabled(false);
-                mStartTimerButton.setEnabled(true);
-                mStopTimerButton.setEnabled(true);
+                setTimerPausedStates();
                 mTimeLeft = savedInstanceState.getLong("TIME_LEFT");
-                isPaused = true;
                 mTimerText.setText(formatTimerText(mTimeLeft));
                 mCountDownTimer = createTimer(savedInstanceState.getLong("TIME_LEFT"));
             }
@@ -84,17 +84,12 @@ public class TimerPageActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_timer_page, menu);
         return super.onCreateOptionsMenu(menu);
-//        return true;
     }
 
     private View.OnClickListener pauseOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            mPauseTimeButton.setEnabled(false);
-            mStartTimerButton.setEnabled(true);
-            mStopTimerButton.setEnabled(true);
-            isPaused = true;
-            mIsTimerOn = false;
+            setTimerPausedStates();
             mCountDownTimer.cancel();
             mTimerText.setText(formatTimerText(mTimeLeft));
         }
@@ -103,10 +98,7 @@ public class TimerPageActivity extends AppCompatActivity {
     private View.OnClickListener stopOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            mStartTimerButton.setEnabled(true);
-            mStopTimerButton.setEnabled(false);
-            mPauseTimeButton.setEnabled(false);
-            mIsTimerOn = false;
+            setTimerStoppedStates();
             mCountDownTimer.cancel();
             mTimerText.setText(formatTimerText(mTea.getBrewingTime()));
         }
@@ -115,25 +107,19 @@ public class TimerPageActivity extends AppCompatActivity {
     private View.OnClickListener startOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(!isPaused){
-                mPauseTimeButton.setEnabled(true);
-                mStartTimerButton.setEnabled(false);
-                mStopTimerButton.setEnabled(true);
-                mIsTimerOn = true;
-                mCountDownTimer = createTimer(mTea.getBrewingTime());
-                mCountDownTimer.start();
+            if(mIsPaused){
+                startTiming(mTimeLeft);
             }else{
-                mPauseTimeButton.setEnabled(true);
-                mStartTimerButton.setEnabled(false);
-                mStopTimerButton.setEnabled(true);
-                mIsTimerOn = true;
-                isPaused = false;
-                mCountDownTimer = createTimer(mTimeLeft);
-                mCountDownTimer.start();
+                startTiming(mTea.getBrewingTime());
             }
-
         }
     };
+
+    private void startTiming(long time){
+        setTimerRunningStates();
+        mCountDownTimer = createTimer(time);
+        mCountDownTimer.start();
+    }
 
     private CountDownTimer createTimer(final long time){
         return new CountDownTimer(time, 1000) {
@@ -144,12 +130,10 @@ public class TimerPageActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                mStartTimerButton.setEnabled(true);
-                mStopTimerButton.setEnabled(false);
-                mPauseTimeButton.setEnabled(false);
+                setTimerStoppedStates();
                 mTimerText.setText(formatTimerText(time));
                 Toast.makeText(mContext, "Timer done enjoy the tea!",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT).show(); //Todo change this to a notification fragment and delete mContext
             }
         };
     }
@@ -168,7 +152,7 @@ public class TimerPageActivity extends AppCompatActivity {
         String secondsD = String.format(Locale.getDefault(), "%02d", seconds);
         String minutesD = String.format(Locale.getDefault(), "%02d", minutes);
 //        String hoursD = String.format(Locale.getDefault(), "%02d", hours);
-        //todo add code to format minutes and hours.
+        
        return /*hoursD + ":" + */minutesD + ":" + secondsD;
     }
 
@@ -179,12 +163,8 @@ public class TimerPageActivity extends AppCompatActivity {
                 mTeaViewModel.delete(mTea);
                 finish();
                 return true;
-
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -193,6 +173,32 @@ public class TimerPageActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putLong("TIME_LEFT", mTimeLeft);
         outState.putBoolean("TIMER_RUNNING", mIsTimerOn);
-        outState.putBoolean("TIMER_PAUSED", isPaused);
+        outState.putBoolean("TIMER_PAUSED", mIsPaused);
+    }
+
+    //Timer State setting
+
+    private void setTimerRunningStates(){
+        mStartTimerButton.setEnabled(false);
+        mStopTimerButton.setEnabled(true);
+        mPauseTimeButton.setEnabled(true);
+        mIsTimerOn = true;
+        mIsPaused = false;
+    }
+
+    private void setTimerPausedStates(){
+        mStartTimerButton.setEnabled(true);
+        mStopTimerButton.setEnabled(true);
+        mPauseTimeButton.setEnabled(false);
+        mIsTimerOn = false;
+        mIsPaused = true;
+    }
+
+    private void setTimerStoppedStates(){
+        mStartTimerButton.setEnabled(true);
+        mStopTimerButton.setEnabled(false);
+        mPauseTimeButton.setEnabled(false);
+        mIsTimerOn = false;
+        mIsPaused = false;
     }
 }
