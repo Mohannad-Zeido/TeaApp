@@ -20,7 +20,6 @@ import java.util.Locale;
 
 public class TimerPageActivity extends AppCompatActivity {
 
-
     private Context mContext;
     private TeaViewModel mTeaViewModel;
     private Button mStartTimerButton, mStopTimerButton, mPauseTimeButton;
@@ -29,7 +28,6 @@ public class TimerPageActivity extends AppCompatActivity {
     private boolean mIsPaused, mIsTimerOn;
     private long mTimeLeft;
     private Tea mTea;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +150,7 @@ public class TimerPageActivity extends AppCompatActivity {
         String secondsD = String.format(Locale.getDefault(), "%02d", seconds);
         String minutesD = String.format(Locale.getDefault(), "%02d", minutes);
 //        String hoursD = String.format(Locale.getDefault(), "%02d", hours);
-        
+
        return /*hoursD + ":" + */minutesD + ":" + secondsD;
     }
 
