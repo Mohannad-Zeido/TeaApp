@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -172,6 +174,10 @@ public class TimerPageActivity extends AppCompatActivity {
             public void onFinish() {
                 setTimerStoppedStates();
                 mTimerText.setText(formatTimerText(time));
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(3000, 130);
+                vibrator.vibrate(vibrationEffect);
+
                 Toast.makeText(mContext, "Timer done enjoy the tea!",
                         Toast.LENGTH_SHORT).show(); //Todo change this to a notification fragment and delete mContext
             }

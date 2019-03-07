@@ -38,5 +38,5 @@
         </activity>
         <activity android:name=".AddTeaActivity"/>
     </application>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 </manifest>
