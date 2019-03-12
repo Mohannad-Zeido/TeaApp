@@ -1,5 +1,7 @@
 package com.zeido.mohannad.timer.tea.teatimer;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.os.CountDownTimer;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -174,9 +177,19 @@ public class TimerPageActivity extends AppCompatActivity {
             public void onFinish() {
                 setTimerStoppedStates();
                 mTimerText.setText(formatTimerText(time));
-                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(3000, 130);
-                vibrator.vibrate(vibrationEffect);
+
+                NotificationChannel notificationChannel = new NotificationChannel("Tea_Done", "Tea_Timer_Done_Notification", NotificationManager.IMPORTANCE_DEFAULT);
+                notificationChannel.setDescription("description bla bla");
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(notificationChannel);
+
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Tea_Done")
+                        .setSmallIcon(R.drawable.tea)
+                        .setContentTitle("Test Title")
+                        .setContentText("Test Context")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                notificationManager.notify(0, builder.build());
 
                 Toast.makeText(mContext, "Timer done enjoy the tea!",
                         Toast.LENGTH_SHORT).show(); //Todo change this to a notification fragment and delete mContext
