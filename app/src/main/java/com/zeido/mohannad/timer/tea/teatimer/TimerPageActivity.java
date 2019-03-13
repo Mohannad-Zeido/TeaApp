@@ -2,6 +2,7 @@ package com.zeido.mohannad.timer.tea.teatimer;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -183,12 +184,17 @@ public class TimerPageActivity extends AppCompatActivity {
                 NotificationManager notificationManager = getSystemService(NotificationManager.class);
                 notificationManager.createNotificationChannel(notificationChannel);
 
+                Intent intent = new Intent(mContext, TimerPageActivity.class);
+                intent.putExtra("teaObject", mTea);
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Tea_Done")
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,intent, 0);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, "Tea_Done")
                         .setSmallIcon(R.drawable.tea)
                         .setContentTitle("Test Title")
                         .setContentText("Test Context")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent);
                 notificationManager.notify(0, builder.build());
 
                 Toast.makeText(mContext, "Timer done enjoy the tea!",
